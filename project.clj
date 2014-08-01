@@ -1,7 +1,5 @@
 (defproject clojure-commons "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :repositories ^:replace [["snapshots" "http://dev-nelson:8080/repository/snapshots"]
-                           ["releases" "http://dev-nelson:8080/repository/internal"]]
+  :description "Set of common utilities that are useful throughout Wikia's projects"
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [environ "0.5.0"]
                  [org.clojure/data.json "0.2.5"]
