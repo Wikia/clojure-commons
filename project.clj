@@ -1,4 +1,4 @@
-(defproject clojure-commons "0.1.0-SNAPSHOT"
+(defproject wikia/commons "0.1.0-SNAPSHOT"
   :description "Set of common utilities that are useful throughout Wikia's projects"
   :url "https://github.com/Wikia/clojure-commons"
   :license {:name "Eclipse Public License"
