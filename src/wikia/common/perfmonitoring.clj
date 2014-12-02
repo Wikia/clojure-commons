@@ -51,3 +51,4 @@
      (publish {~metric (- (System/currentTimeMillis) start#)})
      result#))
 
+(init)
