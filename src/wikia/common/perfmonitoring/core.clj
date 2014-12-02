@@ -16,13 +16,12 @@
 (def buffer-timeout (Integer. (env :perfmonitoring-buffer-timeout-ms 10000)))
 (def series-name (env :perfmonitoring-series-name "metrics"))
 (def config (atom nil))
-(def socket-agent (agent nil))
 
 (defn init []
   (when (env :perfmonitoring-host)
-    (send socket-agent #(or % (DatagramSocket.)))
     (swap! config #(or % {:host (InetAddress/getByName host)
                           :port port
+                          :socket (DatagramSocket.)
                           :chan-in (async/create-chan buffer-size)
                           :chan-out (async/create-chan buffer-size)}))
     (async/read-loop! (:chan-in @config) (:chan-out @config) buffer-size buffer-timeout)
@@ -49,12 +48,6 @@
           []
           points))
 
-(defn send-packet [socket packet]
-  (try
-    (doto socket (.send packet))
-    (catch Exception e
-      socket)))
-
 (defn send-data [content]
   content
   (when-let [packet (try
@@ -65,7 +58,7 @@
                         ^Integer (:port @config))
                       (catch Exception e
                         nil))]
-    (send socket-agent send-packet packet)))
+    (.send (:socket @config) packet)))
 
 (defn publish
   ([series-name point]
