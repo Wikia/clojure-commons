@@ -9,18 +9,17 @@
             [wikia.common.perfmonitoring.async :as async]))
 
 (declare format-content
+         format-series-name
          send-data
          start!
          write-loop!)
 
 (def host (env :perfmonitoring-host))
 (def port (Integer. (env :perfmonitoring-port 5551)))
-(def app (env :perfmonitoring-app "wikia"))
+(def app (.toLowerCase (env :perfmonitoring-app "wikia")))
 (def buffer-size (Integer. (env :perfmonitoring-buffer-size 2000)))
 (def buffer-timeout (Integer. (env :perfmonitoring-buffer-timeout-ms 10000)))
-(def series-name (keyword (str (.toLowerCase app)
-                               "_"
-                               (.toLowerCase (env :perfmonitoring-series-name "metrics")))))
+(def series-name (env :perfmonitoring-series-name "metrics"))
 (def config (atom nil))
 (def socket-agent (agent nil))
 
@@ -44,6 +43,12 @@
         (println points) ;dontcommit
         (send-data (json/generate-string (format-content points)))
         (recur)))))
+
+(defn format-series-name [series-name]
+  (let [series-name (if (keyword? series-name)
+                      (name series-name)
+                      series-name)]
+    (keyword (str app "_" (.toLowerCase series-name)))))
 
 (defn format-content [points]
   (reduce (fn [coll next]
@@ -78,15 +83,14 @@
 (defn publish
   ([series-name point]
     (when @config
-      (async/enqueue (:chan-in @config) (merge {:series-name series-name} point))))
+      (async/enqueue (:chan-in @config) (merge {:series-name (format-series-name series-name)} point))))
   ([point]
     (publish series-name point)))
 
 (defmacro series-timing [series-name metric & body]
   `(let [start# (System/currentTimeMillis)
          result# (do ~@body)]
-     (publish {~metric (- (System/currentTimeMillis) start#)
-               :series-name series-name})
+     (publish ~series-name {~metric (- (System/currentTimeMillis) start#)})
      result#))
 
 (defmacro timing [metric & body]
