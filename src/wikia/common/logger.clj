@@ -1,7 +1,7 @@
 (ns wikia.common.logger
   (:require [clj-logging-config.log4j :as log-config]
             [clojure.tools.logging :as log]
-            [clojure.data.json :as json])
+            [cheshire.core :as json])
   (:use [environ.core])
   (:import (org.apache.log4j.net SyslogAppender)
            (org.apache.log4j FileAppender EnhancedPatternLayout)))
@@ -26,24 +26,24 @@
 ; looks like not all of the 8 syslog levels are available :(
 (defn debug
   ([message context]
-   (log/debug (json/write-str {"@message" message "@context" context})))
+   (log/debug (json/generate-string {"@message" message "@context" context})))
   ([message]
-   (log/debug (json/write-str {"@message" message}))))
+   (log/debug (json/generate-string {"@message" message}))))
 
 (defn info
   ([message context]
-   (log/info (json/write-str {"@message" message "@context" context})))
+   (log/info (json/generate-string {"@message" message "@context" context})))
   ([message]
-   (log/info (json/write-str {"@message" message}))))
+   (log/info (json/generate-string {"@message" message}))))
 
 (defn warn
   ([message context]
-   (log/warn (json/write-str {"@message" message "@context" context})))
+   (log/warn (json/generate-string {"@message" message "@context" context})))
   ([message]
-   (log/warn (json/write-str {"@message" message}))))
+   (log/warn (json/generate-string {"@message" message}))))
 
 (defn error
   ([message context]
-   (log/error (json/write-str {"@message" message "@context" context})))
+   (log/error (json/generate-string {"@message" message "@context" context})))
   ([message]
-   (log/error (json/write-str {"@message" message}))))
+   (log/error (json/generate-string {"@message" message}))))
