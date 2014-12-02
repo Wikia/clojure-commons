@@ -1,6 +1,5 @@
 (ns wikia.common.perfmonitoring
-  (:import (java.net DatagramSocket DatagramPacket InetAddress)
-           (java.util Random))
+  (:import (java.net DatagramSocket DatagramPacket InetAddress))
   (:require [cheshire.core :as json]
             [environ.core :refer [env]]))
 
