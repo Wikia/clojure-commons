@@ -12,4 +12,7 @@
                  ; logger
                  [log4j/log4j "1.2.16" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
                  [org.clojure/tools.logging "0.2.3"]
-                 [org.slf4j/slf4j-log4j12 "1.6.4"]])
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
+
+                 ;perfmonitoring
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]])
