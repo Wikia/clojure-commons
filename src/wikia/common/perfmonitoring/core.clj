@@ -95,5 +95,3 @@
 
 (defmacro timing [metric & body]
   `(series-timing ~series-name ~metric ~@body))
-
-(init)
