@@ -1,18 +1,14 @@
 (ns wikia.common.perfmonitoring.core
   (:import (java.net DatagramSocket DatagramPacket InetAddress))
   (:require [cheshire.core :as json]
-            [clojure.core.async :refer [<!!
-                                        chan
-                                        sliding-buffer
-                                        thread]]
+            [clojure.core.async :refer [chan sliding-buffer]]
             [environ.core :refer [env]]
             [wikia.common.perfmonitoring.async :as async]))
 
 (declare format-content
          format-series-name
          send-data
-         start!
-         write-loop!)
+         write-listener)
 
 (def host (env :perfmonitoring-host))
 (def port (Integer. (env :perfmonitoring-port 5551)))
@@ -30,19 +26,11 @@
                           :port port
                           :chan-in (chan (sliding-buffer (* 2 buffer-size)))
                           :chan-out (chan (sliding-buffer (* 2 buffer-size)))}))
-    (start! config)))
+    (async/read-loop! (:chan-in @config) (:chan-out @config) buffer-size buffer-timeout)
+    (async/write-loop! config write-listener)))
 
-(defn start! [config]
-  (async/read-loop! (:chan-in @config) (:chan-out @config) buffer-size buffer-timeout)
-  (write-loop! config))
-
-(defn write-loop! [config]
-  (thread
-    (loop []
-      (when-let [points (<!! (:chan-out @config))]
-        (println points) ;dontcommit
-        (send-data (json/generate-string (format-content points)))
-        (recur)))))
+(defn write-listener [points]
+  (send-data (json/generate-string (format-content points))))
 
 (defn format-series-name [series-name]
   (let [series-name (if (keyword? series-name)
