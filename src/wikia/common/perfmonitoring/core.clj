@@ -48,7 +48,7 @@
   (let [series-name (if (keyword? series-name)
                       (name series-name)
                       series-name)]
-    (keyword (str app "_" (.toLowerCase series-name)))))
+    (keyword (str app "_" (clojure.string/replace (.toLowerCase series-name) "-" "_")))))
 
 (defn format-content [points]
   (reduce (fn [coll next]
