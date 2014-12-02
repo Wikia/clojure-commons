@@ -1,15 +1,9 @@
 (ns wikia.common.perfmonitoring.async
-  (:require [clojure.core.async :refer [chan
-                                        sliding-buffer
-                                        go
-                                        >!
-                                        >!!
+  (:require [clojure.core.async :refer [>!!
                                         put!
                                         thread
                                         timeout
-                                        alt!!
-                                        <!
-                                        <!!]]
+                                        alt!!]]
             [environ.core :refer [env]]))
 
 (defn enqueue [chan-in event]
