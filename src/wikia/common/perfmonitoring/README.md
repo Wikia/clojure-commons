@@ -7,8 +7,6 @@ The following environment vars are supported:
 * `PERFMONITORING_HOST` influxdb host to connect to
 * `PERFMONITORING_PORT` port to send data (default: 5551)
 * `PERFMONITORING_APP` app name, used as a prefix to series names (default: "wikia")
-* `PERFMONITORING_BUFFER_SIZE` maximum number of messages to keep in the buffer before flushing events to influx db (default: 2000)
-* `PERFMONITORING_BUFFER_TIMEOUT_MS` maxmimum time (in milliseconds) to wait before flushing events to influx db (default: 10000)
 * `PERFMONITORING_SERIES_NAME` the default series name (without `PERFMONITORING_APP` prefix) to use for data (default: "metrics")
 
 Example uses:
