@@ -8,11 +8,15 @@
          send-data
          write-listener)
 
-(def host (env :perfmonitoring-host))
-(def port (Integer. (env :perfmonitoring-port 5551)))
-(def app (.toLowerCase (env :perfmonitoring-app "wikia")))
-(def series-name (env :perfmonitoring-series-name :metrics))
-(def config (atom nil))
+(def ^{:private true} host (env :perfmonitoring-host))
+(def ^{:private true} port (Integer. (env :perfmonitoring-port 5551)))
+(def ^{:private true} app (.toLowerCase (env :perfmonitoring-app "wikia")))
+(def ^{:private true} series-name (env :perfmonitoring-series-name :metrics))
+(def ^{:private true} config (atom nil))
+
+(defn get-series-name
+  []
+  series-name)
 
 (defn init []
   (when (env :perfmonitoring-host)
@@ -53,13 +57,15 @@
       (let [point (merge {:series-name (format-series-name series-name)} point)]
         (future (send-data (json/generate-string (format-content point)))))))
   ([point]
-    (publish series-name point)))
+    (publish (get-series-name) point)))
 
-(defmacro series-timing [series-name metric & body]
-  `(let [start# (System/currentTimeMillis)
-         result# (do ~@body)]
-     (publish ~series-name {~metric (- (System/currentTimeMillis) start#)})
-     result#))
+(defn current-time
+  []
+  (System/currentTimeMillis))
 
 (defmacro timing [metric & body]
-  `(series-timing ~series-name ~metric ~@body))
+  `(let [start# (current-time)]
+     (try
+       ~@body
+       (finally
+         (publish (get-series-name) {~metric (- (current-time) start#)})))))
