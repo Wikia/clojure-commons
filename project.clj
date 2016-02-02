@@ -1,4 +1,4 @@
-(defproject wikia/commons "0.1.3-SNAPSHOT"
+(defproject wikia/commons "0.1.5-SNAPSHOT"
   :description "Set of common utilities that are useful throughout Wikia's projects"
   :url "https://github.com/Wikia/clojure-commons"
   :license {:name "Eclipse Public License"
@@ -9,9 +9,10 @@
                  [org.clojure/clojure "1.6.0"]
 
                  ; logger
-                 [log4j/log4j "1.2.16" :exclusions [javax.mail/mail javax.jms/jms com.sun.jdmk/jmxtools com.sun.jmx/jmxri]]
-                 [org.clojure/tools.logging "0.2.3"]
-                 [org.slf4j/slf4j-log4j12 "1.6.4"]]
+                 [ch.qos.logback/logback-classic "1.1.3"]
+                 [net.logstash.logback/logstash-logback-encoder "4.6"]
+                 [io.clj/logging "0.8.1"]
+                 [org.slf4j/log4j-over-slf4j "1.7.2"]]
   :profiles  {:dev  {:source-paths  ["dev"]
                      :plugins [[lein-midje "3.1.1"]]
                      :dependencies  [[midje "1.6.3"]]}}
