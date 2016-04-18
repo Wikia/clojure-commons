@@ -3,6 +3,14 @@
   :url "https://github.com/Wikia/clojure-commons"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :deploy-repositories [["snapshots" {
+                          :url "https://artifactory.wikia-inc.com/artifactory/libs-snapshot-local/"
+                          :username :env/ARTIFACTORY_USER
+                          :password :env/ARTIFACTORY_PASSWORD}]
+                        ["releases" {
+                          :url "https://artifactory.wikia-inc.com/artifactory/libs-release-local/"
+                          :username :env/ARTIFACTORY_USER
+                          :password :env/ARTIFACTORY_PASSWORD}]]
   :dependencies [[cheshire "5.3.1"]
                  [clj-logging-config "1.9.7"]
                  [environ "0.5.0"]
